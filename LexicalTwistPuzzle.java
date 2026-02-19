@@ -2,15 +2,14 @@ import java.util.Scanner;
 
 /**
  * LexicalTwistPuzzle
- * UC3: Validate Single Word Constraint
  * UC4: Check Reverse Relationship
+ * UC5: Transform Word if Reverse Match
  *
- * This class ensures that each input contains only one word.
- * It determines whether the second word is the reversed version
- * of the first word (case-insensitive).
+ * Determines whether the second word is the reversed version of the first word
+ * (case-insensitive). Applies transformation when reverse match occurs.
  *
  * @Developer
- * @version 4.0
+ * @version 5.0
  */
 public class LexicalTwistPuzzle {
 
@@ -35,13 +34,18 @@ public class LexicalTwistPuzzle {
             return;
         }
 
-        System.out.println("Valid words: " + firstWord + " " + secondWord);
-
-        // Reverse check
+        // Reverse logic
         String reversed = new StringBuilder(firstWord).reverse().toString();
 
         if (reversed.equalsIgnoreCase(secondWord)) {
             System.out.println("Second word is the reverse of first word.");
+            System.out.println("Reverse Matched");
+
+            // UC5 Transformation
+            String lower = reversed.toLowerCase();
+            String transformed = lower.replaceAll("[aeiou]", "@");
+
+            System.out.println("Transformed word: " + transformed);
         } else {
             System.out.println("Not a reverse match.");
         }
