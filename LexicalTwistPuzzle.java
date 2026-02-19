@@ -34,14 +34,14 @@ public class LexicalTwistPuzzle {
             return;
         }
 
-        // Reverse logic
+        // UC4: Reverse relationship check
         String reversed = new StringBuilder(firstWord).reverse().toString();
 
         if (reversed.equalsIgnoreCase(secondWord)) {
             System.out.println("Second word is the reverse of first word.");
             System.out.println("Reverse Matched");
 
-            // UC5 Transformation
+            // UC5: Transformation
             String lower = reversed.toLowerCase();
             String transformed = lower.replaceAll("[aeiou]", "@");
 
