@@ -1,54 +1,54 @@
-import java.util.Scanner;
 import java.util.*;
 
 /**
- * LexicalTwistPuzzle UC6: Combine Words if Not Reverse
  * LexicalTwistPuzzle UC7: Output Based on Vowel–Consonant Count
+ * LexicalTwistPuzzle UC8: Fully Modular & OOPS-Compliant Puzzle System
  *
- * This class merges both words and analyses character distribution.
- * It prints characters based on distribution rules.
- *
- * Flow:
- * 1. Combine → firstWord + secondWord
- * 2. Convert to uppercase
- * 3. Count vowels and consonants separately
- *
- * Rules:
+ * Flow
  * ✔ If vowels > consonants → Print first 2 unique vowels
  * ✔ If consonants > vowels → Print first 2 unique consonants
- * ✔ If equal → Print message
+ * ✔ If equal → Vowels and consonants are equal
  *
- * Key Concepts Used:
- * ● String concatenation
- * ● toUpperCase()
- * ● Character classification
- * ● Ordered filtering
- * ● Duplicate removal
- * ● Conditional logic
+ * Architecture
+ * 1. Inputs collected in main()
+ * 2. Business logic handled in LexicalAnalyzer
+ * 3. Validation handled in WordValidator
+ * 4. Result displayed cleanly
  *
- * @version 6.0
- * @version 7.0
+ * @version 8.0
  */
-public class LexicalTwistPuzzle {
 
-    public static void main(String[] args) {
+// ================= ANALYZER =================
+class LexicalAnalyzer {
 
-        Scanner sc = new Scanner(System.in);
+    public String analyze(String firstWord, String secondWord) {
+        if (isReverse(firstWord, secondWord)) {
+            return transformed(firstWord);
+        } else {
+            return analyzeDistribution(firstWord, secondWord);
+        }
+    }
 
-        System.out.print("Enter first word: ");
-        String firstWord = sc.nextLine();
+    private boolean isReverse(String firstWord, String secondWord) {
+        String reversed =
+                new StringBuilder(firstWord).reverse().toString().toLowerCase();
+        return reversed.equalsIgnoreCase(secondWord);
+    }
 
-        System.out.print("Enter second word: ");
-        String secondWord = sc.nextLine();
+    private String transformed(String word) {
+        String transformed =
+                new StringBuilder(word).reverse().toString().toLowerCase();
+        return transformed.replaceAll("[aeiou]", "@");
+    }
 
-        // Combine and convert to uppercase
-        String combine = (firstWord + secondWord).toUpperCase();
+    private String analyzeDistribution(String firstWord, String secondWord) {
 
+        String combine = firstWord.concat(secondWord).toUpperCase();
         int vowels = 0;
         int consonants = 0;
 
-        Set<Character> vowelSet = new LinkedHashSet<>();
-        Set<Character> consonantSet = new LinkedHashSet<>();
+        Set<Character> vowel = new LinkedHashSet<>();
+        Set<Character> consonant = new LinkedHashSet<>();
 
         for (int i = 0; i < combine.length(); i++) {
             char ch = combine.charAt(i);
@@ -56,40 +56,72 @@ public class LexicalTwistPuzzle {
             if (ch == 'A' || ch == 'E' || ch == 'I'
                     || ch == 'O' || ch == 'U') {
                 vowels++;
-                vowelSet.add(ch);
+                vowel.add(ch);
             } else if (Character.isLetter(ch)) {
                 consonants++;
-                consonantSet.add(ch);
+                consonant.add(ch);
             }
         }
-
-        System.out.println("Combined Word: " + combine);
-        System.out.println("Vowels: " + vowels);
-        System.out.println("Consonants: " + consonants);
 
         if (vowels > consonants) {
-            int cnt = 0;
-            System.out.print("First 2 Unique vowels: ");
-
-            for (char ch : vowelSet) {
-                System.out.print(ch + " ");
-                cnt++;
-                if (cnt == 2) break;
-            }
-
+            System.out.println("First 2 unique Vowels:");
+            return getFirstTwo(vowel);
         } else if (consonants > vowels) {
-            int cnt = 0;
-            System.out.print("First 2 Unique consonants: ");
-
-            for (char ch : consonantSet) {
-                System.out.print(ch + " ");
-                cnt++;
-                if (cnt == 2) break;
-            }
-
+            System.out.println("First 2 unique Consonants:");
+            return getFirstTwo(consonant);
         } else {
-            System.out.println("Vowels and consonants are equal");
+            return "Vowels and consonants are equal";
         }
+    }
+
+    private String getFirstTwo(Set<Character> set) {
+        StringBuilder result = new StringBuilder();
+        int cnt = 0;
+
+        for (char ch : set) {
+            result.append(ch).append(" ");
+            cnt++;
+            if (cnt == 2) break;
+        }
+
+        return result.toString().trim();
+    }
+}
+
+// ================= VALIDATOR =================
+class WordValidator {
+
+    public boolean isValid(String word) {
+        return word != null
+                && !word.trim().isEmpty()
+                && !word.trim().contains(" ");
+    }
+}
+
+// ================= MAIN =================
+public class LexicalTwistPuzzle {
+
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+        WordValidator validator = new WordValidator();
+        LexicalAnalyzer analyzer = new LexicalAnalyzer();
+
+        System.out.print("Enter the first word: ");
+        String firstWord = sc.nextLine();
+
+        System.out.print("Enter the second word: ");
+        String secondWord = sc.nextLine();
+
+        if (!validator.isValid(firstWord)
+                || !validator.isValid(secondWord)) {
+            System.out.println("Invalid input. Only single words allowed.");
+            sc.close();
+            return;
+        }
+
+        String result = analyzer.analyze(firstWord, secondWord);
+        System.out.println(result);
 
         sc.close();
     }
